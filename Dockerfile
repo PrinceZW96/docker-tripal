@@ -110,6 +110,18 @@ RUN cd /var/www/html/sites/all/modules/views \
     && patch -p1 < ../tripal/tripal_views/views-sql-compliant-three-tier-naming-1971160-30.patch \
     && cd /var/www/html/
 
+RUN drush vset site_offline 1 \
+    && drush pm-disable tripal_core \
+    && drush pm-download tripal-7.x-3.0-rc3 \
+    && drush pm-enable tripal \
+    && drush pm-enable tripal_chado \
+    && drush pm-enable tripal_core, tripal_views, tripal_db, tripal_cv, tripal_analysis, tripal_organism, tripal_feature, tripal_pub, tripal_stock \
+    && drush pm-enable tripal_ds tripal_ws \
+    && drush pm-enable tripal_daemon \
+    && drush trpjob-daemon start \
+    && drush vset site_offline 0
+
+
 # Add custom functions
 ADD search.sql /search.sql
 
